@@ -4,7 +4,7 @@ use advent_of_code_2017::*;
 
 macro_rules! day {
     ($day:ident => $path:expr) => ({
-        let file_contents = input_file($path);
+        let file_contents = file_as_string($path);
         $day::from_str(&file_contents).run();
     })
 }

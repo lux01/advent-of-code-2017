@@ -3,12 +3,13 @@ use super::Day;
 use std::u32;
 use std::cmp;
 
+/// [Day 2](https://adventofcode.com/2017/day/2). Calculate the checksum of a spreadsheet.
 pub struct Day02 {
     rows: Vec<Vec<u32>>,
 }
 
 impl Day02 {
-    pub fn row_map_reduce(&self, mapfn: fn(&[u32]) -> u32) -> isize {
+    fn row_map_reduce(&self, mapfn: fn(&[u32]) -> u32) -> isize {
         self.rows.iter().map(|row| mapfn(row)).sum::<u32>() as isize
     }
 }

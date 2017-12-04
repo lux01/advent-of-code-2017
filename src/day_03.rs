@@ -1,5 +1,7 @@
 pub use super::Day;
 
+/// [Day 3](https://adventofcode.com/2017/day/3). Calculate the Manhatten distance of a number from
+/// the centre of number spirals.
 pub struct Day03 {
     number: i32,
 }

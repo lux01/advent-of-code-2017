@@ -1,5 +1,6 @@
 use super::Day;
 
+/// [Day 1](htts://adventofcode.com/2017/day/1). Calculate the solution to a captcha string.
 pub struct Day01 {
     numbers: Vec<u32>,
 }

@@ -1,37 +1,19 @@
-pub mod day_01;
-pub mod day_02;
-pub mod day_03;
+#![warn(missing_docs)]
 
-pub use day_01::Day01;
-pub use day_02::Day02;
-pub use day_03::Day03;
+//! # Advent of Code 2017
+//!
+//! This crate contains my solutions for the [Advent of Code 2017](https://adventofcode.com/2017) challenges.
+//! Each solution is separated into a different [Day](trait.Day.html). Use `cargo test` to run each implementation against
+//! the provided sample input, and use `cargo run` to run all the tests.
 
-use std::fs::File;
-use std::path::Path;
-use std::io::Read;
+mod day;
 
-pub trait Day {
-    const NUM: u32;
-
-    fn from_str(input: &str) -> Self;
-
-    fn part_1(&self) -> isize;
-    fn part_2(&self) -> isize;
-
-    fn run(&self) {
-        println!("Day {}", Self::NUM);
-        println!("=======================================");
-        println!("Part 1: {}", self.part_1());
-        println!("Part 2: {}", self.part_2());
-        println!("");
-    }
+macro_rules! use_days {
+    ($($day:ident),+)=> ( $(mod $day; pub use $day::*; )+)
 }
+pub mod util;
 
-pub fn input_file<P: AsRef<Path>>(path: P) -> String {
-    let mut buffer = String::new();
-    let mut file = File::open(path).expect("Failed to open input file.");
-    file.read_to_string(&mut buffer).expect(
-        "Failed to read input file.",
-    );
-    buffer
-}
+pub use util::file_as_string;
+pub use day::Day;
+
+use_days!(day_01, day_02, day_03);
