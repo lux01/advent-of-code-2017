@@ -1,0 +1,14 @@
+[package]
+name = "advent_of_code_2017"
+version = "0.1.0"
+authors = ["William Woodhead <william.woodhead@lux01.co.uk>"]
+
+[dependencies]
+
+[lib]
+name = "advent_of_code_2017"
+path = "src/lib.rs"
+
+[[bin]]
+name = "aoc_2017"
+path = "src/main.rs"
