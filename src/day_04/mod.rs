@@ -2,11 +2,14 @@ use super::Day;
 
 use std::collections::HashSet;
 
+/// [Day 04](https://adventofcode.com/2017/day/4) - Calculate how many of a series of passphrases
+/// are valid.
 pub struct Day04 {
     passphrases: Vec<String>,
 }
 
 impl Day04 {
+    /// Checks if all the words in the passphrase are unique.
     pub fn is_passphrase_valid(passphrase: &str) -> bool {
         let mut set: HashSet<String> = HashSet::new();
 
@@ -15,6 +18,7 @@ impl Day04 {
         })
     }
 
+    /// Checks if all the words in a passphrase are unique, including reordering of characters.
     pub fn is_passphrase_even_more_valid(passphrase: &str) -> bool {
         let mut set: HashSet<String> = HashSet::new();
 
