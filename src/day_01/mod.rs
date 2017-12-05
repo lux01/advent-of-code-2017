@@ -45,47 +45,19 @@ mod tests {
     use super::*;
 
     #[test]
-    pub fn part_1_test_input_1() {
+    pub fn part_1() {
         assert_eq!(3, Day01::from_str("1122").part_1());
-    }
-
-    #[test]
-    pub fn part_1_test_input_2() {
         assert_eq!(4, Day01::from_str("1111").part_1());
-    }
-
-    #[test]
-    pub fn part_1_test_input_3() {
         assert_eq!(0, Day01::from_str("1234").part_1());
-    }
-
-    #[test]
-    pub fn part_1_test_input_4() {
         assert_eq!(9, Day01::from_str("91212129").part_1());
     }
 
     #[test]
-    pub fn part_2_test_input_1() {
+    pub fn part_2() {
         assert_eq!(6, Day01::from_str("1212").part_2());
-    }
-
-    #[test]
-    pub fn part_2_test_input_2() {
         assert_eq!(0, Day01::from_str("1221").part_2());
-    }
-
-    #[test]
-    pub fn part_2_test_input_3() {
         assert_eq!(4, Day01::from_str("123425").part_2());
-    }
-
-    #[test]
-    pub fn part_2_test_input_4() {
         assert_eq!(12, Day01::from_str("123123").part_2());
-    }
-
-    #[test]
-    pub fn part_2_test_input_5() {
         assert_eq!(4, Day01::from_str("12131415").part_2());
     }
 }

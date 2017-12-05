@@ -44,17 +44,13 @@ mod tests {
     use super::*;
 
     #[test]
-    pub fn part_1_test_1() {
+    pub fn part_1() {
         assert_eq!(0, Day03::from_str("1").part_1());
-    }
-
-    #[test]
-    pub fn part_1_test_2() {
         assert_eq!(3, Day03::from_str("12").part_1());
     }
 
     #[test]
-    pub fn part_2_test() {
+    pub fn part_2() {
         assert_eq!(54, Day03::from_str("50").part_2());
     }
 }
