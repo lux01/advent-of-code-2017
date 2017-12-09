@@ -16,4 +16,5 @@ pub fn main() {
     day!(Day04 => "input/day_04.txt");
     day!(Day05 => "input/day_05.txt");
     day!(Day06 => "input/day_06.txt");
+    day!(Day07 => "input/day_07.txt");
 }
