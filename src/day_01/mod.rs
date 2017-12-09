@@ -7,6 +7,7 @@ pub struct Day01 {
 
 impl Day for Day01 {
     const NUM: u32 = 1;
+    type Output = u32;
 
     fn from_str(input: &str) -> Self {
         let numbers = input
@@ -17,7 +18,7 @@ impl Day for Day01 {
         Day01 { numbers }
     }
 
-    fn part_1(&self) -> isize {
+    fn part_1(&self) -> u32 {
         self.numbers
             .iter()
             .zip(self.numbers.iter().cycle().skip(1))
@@ -25,10 +26,10 @@ impl Day for Day01 {
                 acc + number
             } else {
                 acc
-            }) as isize
+            })
     }
 
-    fn part_2(&self) -> isize {
+    fn part_2(&self) -> u32 {
         self.numbers
             .iter()
             .zip(self.numbers.iter().cycle().skip(self.numbers.len() / 2))
@@ -36,7 +37,7 @@ impl Day for Day01 {
                 acc + number
             } else {
                 acc
-            }) as isize
+            })
     }
 }
 

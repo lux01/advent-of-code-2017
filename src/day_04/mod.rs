@@ -65,6 +65,7 @@ mod tests {
 
 impl Day for Day04 {
     const NUM: u32 = 4;
+    type Output = usize;
 
     fn from_str(input: &str) -> Day04 {
         let passphrases = input.lines().map(|line| line.to_owned()).collect();
@@ -72,17 +73,17 @@ impl Day for Day04 {
         Day04 { passphrases }
     }
 
-    fn part_1(&self) -> isize {
+    fn part_1(&self) -> usize {
         self.passphrases
             .iter()
             .filter(|phrase| Day04::is_passphrase_valid(phrase))
-            .count() as isize
+            .count()
     }
 
-    fn part_2(&self) -> isize {
+    fn part_2(&self) -> usize {
         self.passphrases
             .iter()
             .filter(|phrase| Day04::is_passphrase_even_more_valid(phrase))
-            .count() as isize
+            .count()
     }
 }

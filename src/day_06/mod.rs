@@ -48,6 +48,7 @@ impl Day06 {
 
 impl Day for Day06 {
     const NUM: u32 = 6;
+    type Output = usize;
 
     fn from_str(input: &str) -> Day06 {
         let initial_state = input
@@ -58,13 +59,13 @@ impl Day for Day06 {
         Day06 { initial_state }
     }
 
-    fn part_1(&self) -> isize {
-        Day06::find_fixed_point(&self.initial_state).1 as isize
+    fn part_1(&self) -> usize {
+        Day06::find_fixed_point(&self.initial_state).1
     }
 
-    fn part_2(&self) -> isize {
+    fn part_2(&self) -> usize {
         let fixed_point = Day06::find_fixed_point(&self.initial_state).0;
-        Day06::find_fixed_point(&fixed_point).1 as isize
+        Day06::find_fixed_point(&fixed_point).1
     }
 }
 

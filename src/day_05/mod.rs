@@ -42,6 +42,7 @@ pub struct Day05 {
 
 impl Day for Day05 {
     const NUM: u32 = 5;
+    type Output = usize;
 
     fn from_str(input: &str) -> Day05 {
         let offsets = input.lines().map(|line| line.parse().unwrap()).collect();
@@ -49,17 +50,17 @@ impl Day for Day05 {
         Day05 { offsets }
     }
 
-    fn part_1(&self) -> isize {
-        1 + JumpIncrementIter::new(self.offsets.clone(), |offset| offset + 1).count() as isize
+    fn part_1(&self) -> usize {
+        1 + JumpIncrementIter::new(self.offsets.clone(), |offset| offset + 1).count()
     }
 
-    fn part_2(&self) -> isize {
+    fn part_2(&self) -> usize {
         1 +
             JumpIncrementIter::new(self.offsets.clone(), |offset| if offset >= 3 {
                 offset - 1
             } else {
                 offset + 1
-            }).count() as isize
+            }).count()
     }
 }
 

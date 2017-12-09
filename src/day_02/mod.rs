@@ -16,6 +16,7 @@ impl Day02 {
 
 impl Day for Day02 {
     const NUM: u32 = 2;
+    type Output = isize;
 
     fn from_str(input: &str) -> Self {
         let rows = input

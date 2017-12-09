@@ -14,26 +14,27 @@ pub struct Day03 {
 
 impl Day for Day03 {
     const NUM: u32 = 3;
+    type Output = i32;
 
     fn from_str(input: &str) -> Self {
         Day03 { number: input.parse().unwrap() }
     }
 
-    fn part_1(&self) -> isize {
+    fn part_1(&self) -> i32 {
         let mut iter = SpiralIterator::new().skip_while(|&(_, number)| number != self.number);
 
         match iter.next() {
-            Some(((x, y), _)) => (x.abs() + y.abs()) as isize,
+            Some(((x, y), _)) => (x.abs() + y.abs()),
             None => unreachable!(),
         }
     }
 
-    fn part_2(&self) -> isize {
+    fn part_2(&self) -> i32 {
         let mut iter =
             CachedSummedSpiralIterator::new().skip_while(|&(_, number)| number < self.number);
 
         match iter.next() {
-            Some((_, value)) => value as isize,
+            Some((_, value)) => value,
             None => unreachable!(),
         }
     }
