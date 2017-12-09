@@ -12,7 +12,7 @@ pub struct Day03 {
     number: i32,
 }
 
-impl Day for Day03 {
+impl<'a> Day<'a> for Day03 {
     const NUM: u32 = 3;
     type Output = i32;
 

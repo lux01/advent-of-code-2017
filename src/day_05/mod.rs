@@ -40,7 +40,7 @@ pub struct Day05 {
     offsets: Vec<isize>,
 }
 
-impl Day for Day05 {
+impl<'a> Day<'a> for Day05 {
     const NUM: u32 = 5;
     type Output = usize;
 

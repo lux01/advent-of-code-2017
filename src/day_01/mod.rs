@@ -5,7 +5,7 @@ pub struct Day01 {
     numbers: Vec<u32>,
 }
 
-impl Day for Day01 {
+impl<'a> Day<'a> for Day01 {
     const NUM: u32 = 1;
     type Output = u32;
 

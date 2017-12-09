@@ -1,14 +1,14 @@
 use std::fmt::Display;
 
 /// A generic wrapper for each day in the Advent of Code.
-pub trait Day {
+pub trait Day<'a> {
     /// The day of the advent calendar that this implementation is for.
     const NUM: u32;
     type Output: Display;
 
     /// Each challenge has an input, this constructs the challenge data
     /// from an input string.
-    fn from_str(input: &str) -> Self;
+    fn from_str(input: &'a str) -> Self;
 
     /// Calculate part 1 of the challenge.
     fn part_1(&self) -> Self::Output;

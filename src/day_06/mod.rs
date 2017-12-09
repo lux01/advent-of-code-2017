@@ -46,7 +46,7 @@ impl Day06 {
     }
 }
 
-impl Day for Day06 {
+impl<'a> Day<'a> for Day06 {
     const NUM: u32 = 6;
     type Output = usize;
 

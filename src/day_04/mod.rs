@@ -63,7 +63,7 @@ mod tests {
     }
 }
 
-impl Day for Day04 {
+impl<'a> Day<'a> for Day04 {
     const NUM: u32 = 4;
     type Output = usize;
 
