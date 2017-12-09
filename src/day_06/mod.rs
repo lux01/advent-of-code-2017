@@ -48,7 +48,8 @@ impl Day06 {
 
 impl<'a> Day<'a> for Day06 {
     const NUM: u32 = 6;
-    type Output = usize;
+    type Output1 = usize;
+    type Output2 = usize;
 
     fn from_str(input: &str) -> Day06 {
         let initial_state = input

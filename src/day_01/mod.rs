@@ -7,7 +7,8 @@ pub struct Day01 {
 
 impl<'a> Day<'a> for Day01 {
     const NUM: u32 = 1;
-    type Output = u32;
+    type Output1 = u32;
+    type Output2 = u32;
 
     fn from_str(input: &str) -> Self {
         let numbers = input

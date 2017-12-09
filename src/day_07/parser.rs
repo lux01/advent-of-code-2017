@@ -15,22 +15,19 @@ named!(children_list(&str) -> Vec<&str>, do_parse!(
     (children)
 ));
 
-named!(parse_weight(&str) -> u32,
+named!(parse_weight(&str) -> u64,
     delimited!(tag!("("), map_res!(take_while_s!(is_digit), FromStr::from_str), tag!(")"))
 );
 
-named!(program(&str) -> Program, do_parse!(
+named!(program(&str) -> (Program, Vec<&str>), do_parse!(
     name: take_until_s!(" ") >>
     tag!(" ") >>
     weight: parse_weight >>
     children: opt!(complete!(children_list)) >>
-    (match children {
-        Some(children_list) => Program::new(name, weight).children(children_list),
-        None => Program::new(name, weight),
-    })
+    ((Program::new(name, weight), children.unwrap_or(vec![])))
 ));
 
-named!(pub many_programs(&str) -> Vec<Program>,
+named!(pub many_programs(&str) -> Vec<(Program, Vec<&str>)>,
     many1!(ws!(program)));
 
 #[cfg(test)]
@@ -50,7 +47,7 @@ mod tests {
     #[test]
     fn parse_program_with_children() {
         let input = "ugml (68) -> gyxo, ebii, jptl";
-        let output = Program::new("ugml", 68).children(vec!["gyxo", "ebii", "jptl"]);
+        let output = (Program::new("ugml", 68), vec!["gyxo", "ebii", "jptl"]);
 
         let (unused, parsed_output) = program(&input).unwrap();
 
@@ -61,7 +58,7 @@ mod tests {
     #[test]
     fn parse_program_without_children() {
         let input = "ugml (68)";
-        let output = Program::new("ugml", 68);
+        let output = (Program::new("ugml", 68), vec![]);
 
         let (unused, parsed_output) = program(&input).unwrap();
 

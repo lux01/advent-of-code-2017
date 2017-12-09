@@ -1,81 +1,158 @@
 use super::parser;
 
+
+use std::fmt;
 use std::collections::HashMap;
 use std::rc::Rc;
 use std::cell::RefCell;
+use std::cmp;
 
-#[derive(Debug, PartialEq, Eq)]
+type ProgramRef<'a> = Rc<RefCell<Program<'a>>>;
+
+#[derive(Eq)]
 pub struct Program<'a> {
     pub name: &'a str,
-    pub weight: u32,
-    pub children: Vec<&'a str>,
-    pub maybe_parent: Option<&'a str>,
+    pub weight: u64,
+    pub children: Vec<ProgramRef<'a>>,
+    pub parent: Option<ProgramRef<'a>>,
 }
 
+impl<'a> fmt::Debug for Program<'a> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
+        write!(f, "{} ({})", self.name, self.weight)?;
+
+        if self.children.len() > 0 {
+            write!(f, " -> {}", self.children[0].borrow().name)?;
+        }
+
+        for child in self.children.iter().skip(1) {
+            write!(f, ", {}", child.borrow().name)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'a> PartialOrd for Program<'a> {
+    fn partial_cmp(&self, other: &Self) -> Option<cmp::Ordering> {
+        Some(self.name.cmp(&other.name).then(
+            self.weight.cmp(&other.weight),
+        ))
+    }
+}
+
+impl<'a> Ord for Program<'a> {
+    fn cmp(&self, other: &Self) -> cmp::Ordering {
+        self.name.cmp(&other.name).then(
+            self.weight.cmp(&other.weight),
+        )
+    }
+}
+
+impl<'a> PartialEq for Program<'a> {
+    fn eq(&self, other: &Self) -> bool {
+        let name = self.name == other.name;
+        let weight = self.weight == other.weight;
+
+        name && weight
+    }
+}
+
+
 impl<'a> Program<'a> {
-    pub fn new(name: &'a str, weight: u32) -> Program<'a> {
+    pub fn new(name: &'a str, weight: u64) -> Program<'a> {
         Program {
             name: name,
             weight: weight,
             children: vec![],
-            maybe_parent: None,
+            parent: None,
         }
     }
 
-    pub fn children(self, children: Vec<&'a str>) -> Program<'a> {
-        Program {
-            children: children,
-            ..self
-        }
+    pub fn total_weight(&self) -> u64 {
+        self.weight +
+            self.children
+                .iter()
+                .map(|child| child.borrow().total_weight())
+                .sum::<u64>()
     }
 
-    pub fn parent(self, parent: &'a str) -> Program<'a> {
-        Program {
-            maybe_parent: Some(parent),
-            ..self
+    pub fn add_child(&mut self, child: ProgramRef<'a>) {
+        self.children.push(child);
+        self.children.sort();
+    }
+
+    pub fn childrens_weights(&self) -> Vec<u64> {
+        let mut all_childrens_weights = self.children
+            .iter()
+            .map(|child| child.borrow().total_weight())
+            .collect::<Vec<_>>();
+        all_childrens_weights.dedup();
+        all_childrens_weights
+    }
+
+    pub fn has_incorrect_weight(&self) -> bool {
+        match self.parent {
+            None => false,
+            Some(ref parent) => {
+                let all_siblings_weight = parent.borrow().childrens_weights();
+                if all_siblings_weight.len() == 1 {
+                    return false;
+                } else {
+                    let my_weight = self.total_weight();
+
+                    let instances_of_my_weight = all_siblings_weight
+                        .iter()
+                        .filter(|&&weight| weight == my_weight)
+                        .count();
+
+                    instances_of_my_weight == 1
+                }
+            }
         }
     }
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(PartialEq, Eq)]
 pub struct ProgramTree<'a> {
-    pub programs: HashMap<&'a str, Rc<RefCell<Program<'a>>>>,
-    pub bottom_programs: Vec<Rc<RefCell<Program<'a>>>>,
+    pub programs: HashMap<&'a str, ProgramRef<'a>>,
+    pub bottom_programs: Vec<ProgramRef<'a>>,
 }
 
 impl<'a> ProgramTree<'a> {
-    pub fn from_str(input: &str) -> ProgramTree {
-        let (unused, results) = parser::many_programs(input).unwrap();
+    pub fn from_str(input: &'a str) -> ProgramTree<'a> {
+        let (unused, parse_results) = parser::many_programs(input).unwrap();
         assert_eq!("", unused);
 
+        let mut parent_children_names = HashMap::new();
         let mut programs = HashMap::new();
-        for program in results.into_iter() {
+
+        for (program, children_names) in parse_results.into_iter() {
+            parent_children_names.insert(program.name, children_names);
             programs.insert(program.name, Rc::new(RefCell::new(program)));
         }
 
-        ProgramTree {
-            programs,
-            bottom_programs: vec![],
-        }
-    }
+        for (parent_name, children_names) in parent_children_names.into_iter() {
+            for child_name in children_names.into_iter() {
+                let ref child = programs[&child_name];
+                let ref parent = programs[&parent_name];
 
-    pub fn resolve_parents(self) -> ProgramTree<'a> {
-        for (name, program) in self.programs.iter() {
-            for child_name in program.borrow().children.iter() {
-                self.programs[child_name].borrow_mut().maybe_parent = Some(name);
+                child.borrow_mut().parent = Some(parent.clone());
+                parent.borrow_mut().children.push(child.clone());
             }
         }
 
-        let bottom_programs = self.programs
+        let bottom_programs = programs
             .iter()
-            .filter(|&(_, program)| program.borrow().maybe_parent.is_none())
+            .filter(|&(_, program)| program.borrow().parent.is_none())
             .map(|(_, program)| program.clone())
             .collect();
 
-        ProgramTree {
+        let output = ProgramTree {
+            programs,
             bottom_programs,
-            ..self
-        }
+        };
+
+        output
     }
 }
 
@@ -93,47 +170,20 @@ mod tests {
 
         let a = Rc::new(RefCell::new(Program::new("a", 1)));
         let b = Rc::new(RefCell::new(Program::new("b", 2)));
-        let c = Rc::new(RefCell::new(Program::new("c", 3).children(vec!["a", "b"])));
+        let c = Rc::new(RefCell::new(Program::new("c", 3)));
+
+        a.borrow_mut().parent = Some(c.clone());
+        b.borrow_mut().parent = Some(c.clone());
+        c.borrow_mut().add_child(a.clone());
+        c.borrow_mut().add_child(b.clone());
 
         let mut expected_programs = HashMap::new();
-        expected_programs.insert("a", a);
-        expected_programs.insert("b", b);
-        expected_programs.insert("c", c);
-
-        assert_eq!(expected_programs, tree.programs);
-        assert!(tree.bottom_programs.is_empty());
-    }
-
-    #[test]
-    fn program_tree_resolve_parents() {
-        let input = "a (1)
-        b (2)
-        c (3) -> a, b";
-
-        let tree = ProgramTree::from_str(&input).resolve_parents();
-
-
-        let a = Rc::new(RefCell::new(Program::new("a", 1).parent("c")));
-        let b = Rc::new(RefCell::new(Program::new("b", 2).parent("c")));
-        let c = Rc::new(RefCell::new(Program::new("c", 3).children(vec!["a", "b"])));
-
-        let mut expected_programs = HashMap::new();
-        expected_programs.insert("a", a);
-        expected_programs.insert("b", b);
+        expected_programs.insert("a", a.clone());
+        expected_programs.insert("b", b.clone());
         expected_programs.insert("c", c.clone());
 
-        let bottom_programs = vec![c.clone()];
-
-        assert_eq!(
-            expected_programs,
-            tree.programs,
-            "Output tree does not have the correct program list"
-        );
-        assert_eq!(
-            bottom_programs,
-            tree.bottom_programs,
-            "Output tree does not have the correct bottom programs list"
-        );
+        assert_eq!(expected_programs, tree.programs);
+        assert!(!tree.bottom_programs.is_empty());
     }
 
 }

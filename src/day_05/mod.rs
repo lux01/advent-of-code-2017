@@ -42,7 +42,8 @@ pub struct Day05 {
 
 impl<'a> Day<'a> for Day05 {
     const NUM: u32 = 5;
-    type Output = usize;
+    type Output1 = usize;
+    type Output2 = usize;
 
     fn from_str(input: &str) -> Day05 {
         let offsets = input.lines().map(|line| line.parse().unwrap()).collect();

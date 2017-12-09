@@ -14,7 +14,8 @@ pub struct Day03 {
 
 impl<'a> Day<'a> for Day03 {
     const NUM: u32 = 3;
-    type Output = i32;
+    type Output1 = i32;
+    type Output2 = i32;
 
     fn from_str(input: &str) -> Self {
         Day03 { number: input.parse().unwrap() }

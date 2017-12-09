@@ -65,7 +65,8 @@ mod tests {
 
 impl<'a> Day<'a> for Day04 {
     const NUM: u32 = 4;
-    type Output = usize;
+    type Output1 = usize;
+    type Output2 = usize;
 
     fn from_str(input: &str) -> Day04 {
         let passphrases = input.lines().map(|line| line.to_owned()).collect();
