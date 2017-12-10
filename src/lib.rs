@@ -19,4 +19,13 @@ pub mod util;
 pub use util::file_as_string;
 pub use day::Day;
 
-use_days!(day_01, day_02, day_03, day_04, day_05, day_06, day_07);
+use_days!(
+    day_01,
+    day_02,
+    day_03,
+    day_04,
+    day_05,
+    day_06,
+    day_07,
+    day_08
+);

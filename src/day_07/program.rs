@@ -7,6 +7,9 @@ use std::rc::Rc;
 use std::cell::RefCell;
 use std::cmp;
 
+// Rc = Reference counted pointer
+// RefCell = A mutable memory location on the heap with borrow rules checked dynamically.
+//           Borrows are done by reference rather than by value.
 type ProgramRef<'a> = Rc<RefCell<Program<'a>>>;
 
 #[derive(Eq)]
@@ -15,46 +18,6 @@ pub struct Program<'a> {
     pub weight: u64,
     pub children: Vec<ProgramRef<'a>>,
     pub parent: Option<ProgramRef<'a>>,
-}
-
-impl<'a> fmt::Debug for Program<'a> {
-    fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
-        write!(f, "{} ({})", self.name, self.weight)?;
-
-        if self.children.len() > 0 {
-            write!(f, " -> {}", self.children[0].borrow().name)?;
-        }
-
-        for child in self.children.iter().skip(1) {
-            write!(f, ", {}", child.borrow().name)?;
-        }
-        Ok(())
-    }
-}
-
-impl<'a> PartialOrd for Program<'a> {
-    fn partial_cmp(&self, other: &Self) -> Option<cmp::Ordering> {
-        Some(self.name.cmp(&other.name).then(
-            self.weight.cmp(&other.weight),
-        ))
-    }
-}
-
-impl<'a> Ord for Program<'a> {
-    fn cmp(&self, other: &Self) -> cmp::Ordering {
-        self.name.cmp(&other.name).then(
-            self.weight.cmp(&other.weight),
-        )
-    }
-}
-
-impl<'a> PartialEq for Program<'a> {
-    fn eq(&self, other: &Self) -> bool {
-        let name = self.name == other.name;
-        let weight = self.weight == other.weight;
-
-        name && weight
-    }
 }
 
 
@@ -155,6 +118,51 @@ impl<'a> ProgramTree<'a> {
         output
     }
 }
+
+// We need to manually implement Debug, PartialOrd, Ord, and PartialEq for Program due
+// to the circular references between parents and children. If we try to derive these
+// traits automatically they will get stuck in an endless loop and smash the stack.
+
+impl<'a> fmt::Debug for Program<'a> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
+        write!(f, "{} ({})", self.name, self.weight)?;
+
+        if self.children.len() > 0 {
+            write!(f, " -> {}", self.children[0].borrow().name)?;
+        }
+
+        for child in self.children.iter().skip(1) {
+            write!(f, ", {}", child.borrow().name)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'a> PartialOrd for Program<'a> {
+    fn partial_cmp(&self, other: &Self) -> Option<cmp::Ordering> {
+        Some(self.name.cmp(&other.name).then(
+            self.weight.cmp(&other.weight),
+        ))
+    }
+}
+
+impl<'a> Ord for Program<'a> {
+    fn cmp(&self, other: &Self) -> cmp::Ordering {
+        self.name.cmp(&other.name).then(
+            self.weight.cmp(&other.weight),
+        )
+    }
+}
+
+impl<'a> PartialEq for Program<'a> {
+    fn eq(&self, other: &Self) -> bool {
+        let name = self.name == other.name;
+        let weight = self.weight == other.weight;
+
+        name && weight
+    }
+}
+
 
 #[cfg(test)]
 mod tests {
