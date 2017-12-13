@@ -1,4 +1,4 @@
-use super::{Condition, Predicate, Register, Instruction, OpCode};
+use super::{Condition, Predicate, Instruction, OpCode};
 
 use std::str::FromStr;
 

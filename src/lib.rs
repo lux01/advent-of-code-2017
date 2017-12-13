@@ -1,4 +1,3 @@
-#![warn(missing_docs)]
 
 //! # Advent of Code 2017
 //!
@@ -27,5 +26,6 @@ use_days!(
     day_05,
     day_06,
     day_07,
-    day_08
+    day_08,
+    day_09
 );

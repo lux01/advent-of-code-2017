@@ -39,7 +39,7 @@ impl<'a> Program<'a> {
                 .sum::<u64>()
     }
 
-    pub fn add_child(&mut self, child: ProgramRef<'a>) {
+    fn add_child(&mut self, child: ProgramRef<'a>) {
         self.children.push(child);
         self.children.sort();
     }
@@ -100,7 +100,7 @@ impl<'a> ProgramTree<'a> {
                 let ref parent = programs[&parent_name];
 
                 child.borrow_mut().parent = Some(parent.clone());
-                parent.borrow_mut().children.push(child.clone());
+                parent.borrow_mut().add_child(child.clone());
             }
         }
 
