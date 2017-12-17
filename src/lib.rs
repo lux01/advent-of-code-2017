@@ -28,5 +28,6 @@ use_days!(
     day_07,
     day_08,
     day_09,
-    day_10
+    day_10,
+    day_11
 );
