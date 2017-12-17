@@ -20,7 +20,7 @@ pub trait Day<'a> {
     /// Run both parts of the challenge in order, printing the results.
     fn run(&self) {
         println!("Day {}", Self::NUM);
-        println!("=======================================");
+        println!("========================================");
         println!("Part 1: {}", self.part_1());
         println!("Part 2: {}", self.part_2());
         println!("");
