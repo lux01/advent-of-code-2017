@@ -1,6 +1,4 @@
-use nom::digit;
-use std::str::FromStr;
-
+use super::super::util::parse_usize;
 use std::collections::HashSet;
 
 #[derive(PartialEq, Eq, Debug, Hash)]
@@ -21,10 +19,6 @@ impl Link {
         parse_links(input).unwrap().1
     }
 }
-
-named!(parse_usize(&str) -> usize,
-    map!(digit, |s| FromStr::from_str(s).unwrap())
-);
 
 named!(parse_single_link(&str) -> (usize, Vec<usize>), do_parse!(
     from: call!(parse_usize) >>
