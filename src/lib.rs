@@ -7,6 +7,7 @@
 
 #[macro_use]
 extern crate nom;
+extern crate petgraph;
 
 mod day;
 
@@ -29,5 +30,6 @@ use_days!(
     day_08,
     day_09,
     day_10,
-    day_11
+    day_11,
+    day_12
 );
