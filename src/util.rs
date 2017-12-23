@@ -25,3 +25,7 @@ named!(pub parse_usize(&str) -> usize,
 named!(pub parse_isize(&str) -> isize,
     map!(digit, |s| FromStr::from_str(s).unwrap())
 );
+
+named!(pub parse_u64(&str) -> u64,
+    map!(digit, |s| FromStr::from_str(s).unwrap())
+);
