@@ -6,6 +6,7 @@ authors = ["William Woodhead <william.woodhead@lux01.co.uk>"]
 [dependencies]
 nom = "^3.2"
 petgraph = "0.4.10"
+clap = "2.29.0"
 
 
 [lib]
