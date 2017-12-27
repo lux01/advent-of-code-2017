@@ -41,6 +41,7 @@ pub fn main() {
         "11" => day!(Day11 => "input/day_11.txt"),
         "12" => day!(Day12 => "input/day_12.txt"),
         "13" => day!(Day13 => "input/day_13.txt"),
+        "14" => day!(Day14 => "input/day_14.txt"),
         "15" => day!(Day15 => "input/day_15.txt"),
         "16" => day!(Day16 => "input/day_16.txt"),
         _ => println!("Unknown day"),
